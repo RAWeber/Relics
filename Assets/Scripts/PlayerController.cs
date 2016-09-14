@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour {
     Vector3 smoothMoveVelocity;
     float verticalLookRotation;
     bool grounded;
-    bool isWalking;
 
     void Awake () {
         Cursor.lockState = CursorLockMode.Locked;
