@@ -14,7 +14,7 @@ GameObject:
   - 195: {fileID: 19500184}
   - 114: {fileID: 11444602}
   m_Layer: 8
-  m_Name: BasicEnemy
+  m_Name: FastEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,7 +43,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: a7dcd8d4d4372234b9e501b2ab925809, type: 2}
+  - {fileID: 2100000, guid: 46d07d72af3632347879f27a1d62faaf, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -78,8 +78,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 10
-  atttackDamage: 10
-  attackSpeed: 3
+  level: 5
+  moveSpeed: 7
+  atttackDamage: 5
+  attackSpeed: 5
   attackDistance: 0.5
   attackDelay: 1
   deathEffect: {fileID: 19878482, guid: 29092f6daad12dd4c82a87336bdcd886, type: 2}

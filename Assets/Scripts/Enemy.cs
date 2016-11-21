@@ -8,6 +8,8 @@ public class Enemy : LivingEntity {
     public enum State { Idle, Chasing, Attacking };
     State currentState;
 
+    public int level = 1;
+    public float moveSpeed = 3.5f;
     public float atttackDamage = 10;
     public float attackSpeed = 3;
     public float attackDistance = .5f;
@@ -28,6 +30,7 @@ public class Enemy : LivingEntity {
     void Awake()
     {
         pathfinder = GetComponent<NavMeshAgent>();
+        pathfinder.speed = moveSpeed;
 
         if (GameObject.FindGameObjectWithTag("Player") != null)
         {
@@ -36,8 +39,8 @@ public class Enemy : LivingEntity {
             target = GameObject.FindGameObjectWithTag("Player").transform;
             targetEntity = target.GetComponent<LivingEntity>();
 
-            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+            myCollisionRadius = GetComponent<CapsuleCollider>().radius * transform.localScale.x;
+            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius * target.localScale.x;
         }
     }
 
@@ -57,7 +60,6 @@ public class Enemy : LivingEntity {
     void OnTargetDeath()
     {
         hasTarget = false;
-        pathfinder.enabled = false;
         currentState = State.Idle;
     }
 
@@ -76,6 +78,7 @@ public class Enemy : LivingEntity {
             {
                 OnDeathStatic();
             }
+            deathEffect.startColor = GetComponent<Renderer>().material.color;
             Destroy(Instantiate(deathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)) as GameObject, deathEffect.startLifetime);
         }
         base.TakeDamage(damage, hitPoint, hitDirection);
@@ -88,8 +91,9 @@ public class Enemy : LivingEntity {
         pathfinder.enabled = false;
 
         Vector3 originalPosition = transform.position;
-        Vector3 dirToTarget = (target.position - transform.position).normalized;
-        Vector3 attackPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius);
+        Vector3 newHeightTarget = new Vector3(target.position.x, transform.position.y, target.position.z);
+        Vector3 dirToTarget = (newHeightTarget - transform.position).normalized;
+        Vector3 attackPosition = newHeightTarget - dirToTarget * (myCollisionRadius + targetCollisionRadius);
 
         float percent = 0;
 
@@ -123,7 +127,7 @@ public class Enemy : LivingEntity {
             if (currentState == State.Chasing)
             {
                 Vector3 dirToTarget = (target.position - transform.position).normalized;
-                Vector3 targetPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius + attackDistance / 2);
+                Vector3 targetPosition = target.position - dirToTarget * (myCollisionRadius + targetCollisionRadius + attackDistance/2);
                 if (!dead)
                 {
                     pathfinder.SetDestination(targetPosition);
@@ -140,7 +144,7 @@ public class Enemy : LivingEntity {
             if (Time.time > nextAttackTime)
             {
                 float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-                if (sqrDstToTarget < Mathf.Pow(attackDistance + myCollisionRadius + targetCollisionRadius, 2))
+                if (sqrDstToTarget <= Mathf.Pow(attackDistance + myCollisionRadius + targetCollisionRadius, 2))
                 {
                     nextAttackTime = Time.time + attackDelay;
                     StartCoroutine(Attack());
