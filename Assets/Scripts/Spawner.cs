@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour {
     void Start()
     {
         currentWaveNumber = 0;
-        FindObjectOfType<Player>().OnDeath += OnPlayerDeath;
+        //FindObjectOfType<Player>().OnDeath += OnPlayerDeath;
 
         enemyList = enemyList.OrderBy(m => m.waveEncounter).ToArray<EnemySpawn>();
 

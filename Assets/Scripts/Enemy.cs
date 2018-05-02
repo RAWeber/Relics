@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class Enemy : LivingEntity {
 
     public enum State { Idle, Chasing, Attacking };
@@ -16,7 +16,7 @@ public class Enemy : LivingEntity {
     public float attackDelay = 1;
     public ParticleSystem deathEffect;
 
-    NavMeshAgent pathfinder;
+    UnityEngine.AI.NavMeshAgent pathfinder;
     Transform target;
     LivingEntity targetEntity;
 
@@ -29,7 +29,7 @@ public class Enemy : LivingEntity {
 
     void Awake()
     {
-        pathfinder = GetComponent<NavMeshAgent>();
+        pathfinder = GetComponent<UnityEngine.AI.NavMeshAgent>();
         pathfinder.speed = moveSpeed;
 
         if (GameObject.FindGameObjectWithTag("Player") != null)
